@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "YGO Alignment Fixer", "YGO Alignment Fixer\YGO Alignment Fixer.vcxproj", "{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,18 @@ Global
 		{516E1916-56E1-4E2A-9337-447B4EB8C605}.Release|x64.Build.0 = Release|x64
 		{516E1916-56E1-4E2A-9337-447B4EB8C605}.Release|x86.ActiveCfg = Release|Win32
 		{516E1916-56E1-4E2A-9337-447B4EB8C605}.Release|x86.Build.0 = Release|Win32
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|Any CPU.Build.0 = Debug|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|x64.ActiveCfg = Debug|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|x64.Build.0 = Debug|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|x86.ActiveCfg = Debug|Win32
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Debug|x86.Build.0 = Debug|Win32
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|Any CPU.ActiveCfg = Release|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|Any CPU.Build.0 = Release|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|x64.ActiveCfg = Release|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|x64.Build.0 = Release|x64
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|x86.ActiveCfg = Release|Win32
+		{C639A1B9-BC93-40F1-A0B4-A6848C3FB444}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,9 @@
 #include <filesystem>
 #include <thread>
 
-#include <globals.h>
 #include <Windows.h>
+
+#include <globals.h>
 
 using namespace std;
 

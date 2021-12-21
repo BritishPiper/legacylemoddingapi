@@ -238,6 +238,9 @@ private:
 		if (characters.contains(id)) {
 			return &characters[id];
 		}
+		else if (id >= 0xF0) {
+			return nullptr;
+		}
 		else {
 			return (Character*)(0x142913470 + sizeof(Character) * id);
 		}

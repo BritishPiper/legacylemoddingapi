@@ -86,6 +86,9 @@
     <ClCompile Include="Source\util\windows.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\api\arena.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Source\util\shadowspace.asm">

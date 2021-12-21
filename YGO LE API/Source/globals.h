@@ -10,6 +10,7 @@ constexpr const char data_folder[] = "data/";
 constexpr const char decks_folder[] = "data/decks";
 constexpr const char log_file[] = "log.txt";
 constexpr const char log_folder[] = "logs/";
+constexpr const char overwrite_folder[] = "data\\overwrite\\";
 constexpr const char plugins_folder[] = "plugins/";
 constexpr const char plugin_manager_dll[] = "YGO Plugin Manager.dll";
 constexpr const char save_folder[] = "save/";

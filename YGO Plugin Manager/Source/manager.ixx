@@ -17,6 +17,7 @@ export module manager;
 using namespace std;
 using namespace filesystem;
 
+import arena;
 import card;
 import campaign;
 import character;
@@ -52,6 +53,7 @@ public:
 			ExtraSave::Setup();
 
 			// Initialize the API
+			Arenas::Setup();
 			card::Cards::Setup();
 			Campaign::Setup();
 			Characters::Setup();

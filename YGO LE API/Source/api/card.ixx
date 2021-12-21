@@ -34,7 +34,7 @@ export namespace card {
     constexpr CardID original_cards_maxloadid = 0x27B5;
     constexpr CardID original_cards_offseted_maxid = 0x2B3D;
     constexpr CardID original_cards_offset = 0xF3C;
-    constexpr CardID original_cards_maxid = original_cards_offseted_maxid + original_cards_offset;
+    constexpr CardID original_cards_maxid = original_cards_offseted_maxid + original_cards_offset; // 0x3A79
     constexpr CardID new_card_limit = 0xFFFF;
 
     // loc - ([(id*2 + 2)*2] + 0x1A3*2 + 2)*2
@@ -520,7 +520,7 @@ export namespace card {
         CardData(BritishCard card)
         {
             ID = card.ID;
-            Attack = card.Attack;
+            Attack = card.IsAttackQuestionMark ? QuestionMarkAttack : card.Attack;
 
             if (card.Kind == Kind::Link || card.Kind == Kind::LinkEffect)
             {
@@ -528,7 +528,7 @@ export namespace card {
             }
             else
             {
-                ArrowsOrDefense10 = card.DefenseOrArrows / 10;
+                ArrowsOrDefense10 = (card.IsDefenseQuestionMark ? QuestionMarkDefense : card.DefenseOrArrows) / 10;
             }
 
             Kind = card.Kind;
@@ -630,8 +630,8 @@ export namespace card {
     {
         Qword Unknown0____; // 0x0
         Qword Unknown1____[4]; // 0x8
-        Qword Unknown2____[original_cards_offseted_maxid]; // 0x28 = -0x79b8 + 0xF3C * 8
-        Word Unknown3____[original_cards_offseted_maxid]; // 0x15A10 = 0x13B98 + 0xF3C * 2
+        Qword Pointers[original_cards_offseted_maxid]; // 0x28 = -0x79b8 + 0xF3C * 8
+        Word Ids[original_cards_offseted_maxid]; // 0x15A10 = 0x13B98 + 0xF3C * 2
         Undefined1 Unknown4____[6]; // 0x1B08A
     };
 
@@ -639,8 +639,8 @@ export namespace card {
     {
         Qword Unknown0____; // 0x0
         Qword Unknown1____[4]; // 0x8
-        Qword Unknown2____[new_card_limit]; // 0x28
-        Word Unknown3____[new_card_limit]; // 0x80020
+        Qword Pointers[new_card_limit]; // 0x28
+        Word Ids[new_card_limit]; // 0x80020
         Undefined1 Unknown4____[6]; // 0xA001E
     };
 
@@ -676,6 +676,8 @@ export namespace card {
 
     Hook GetCardImageHook = Hook(0x140753BA0);
 
+    Hook GetCardPropertiesHook = Hook(0x1407CAB00);
+
     Hook GetLoadIDHook = Hook(0x14076E000);
 
     Hook ReadCardBinHook = Hook(0x14076C3B0);
@@ -695,11 +697,11 @@ export namespace card {
     Patch CheckCardNamePatch = Patch(0x14076CFF0, "\x48\xB8\xA0\xD3\xC8\x40\x01\x00\x00\x00\x48\x8B\x00\x4C\x8B\x88\xC8\x00\x00\x00\x45\x0F\xBF\x11\x4C\x8B\xD9\x90\x90\x90"); // Allows CheckCardNameHook
 
     Patch DuelPatch1 = Patch(0x1407BAF98, "\x90\x90\x66\x41\x3B\xC2\x90\x90"); // Card in hand
-    Patch DuelPatch2 = Patch(0x14078983B, "\x3D\xC2\xF0\x00\x00"); // Open card details
+    Patch DuelPatch2 = Patch(0x140789836, "\x83\xE8\x01\x90\x90\x3D\xFD\xFF\x00\x00"); // Open card details
     //Patch DuelPatch2 = Patch(0x140789840, "\x90\x90"); // Old open card details
     Patch DuelPatch3 = Patch(0x140778180, "\x3D\xC2\xF0\x00\x00"); // Card click
     //Patch DuelPatch3 = Patch(0x140778185, "\x90\x90"); // Old card click
-    Patch DuelPatch4 = Patch(0x14088677E, "\x41\xBF\xC2\xF0\x00\x00"); // On mouse over
+    Patch DuelPatch4 = Patch(0x14088676D, "\x41\xBE\x01\x00\x00\x00\x0F\xB7\x87\x5E\x04\x00\x00\x66\x41\x2B\xC6\x41\xBF\xFD\xFF\x00\x00"); // On mouse over
 
     Patch GetIllustrationPatch1 = Patch(0x14086D057, "\x41\x8D\x02\x90\x90\x90\x90\x3D\xFF\xFF\x00\x00");
     Patch GetIllustrationPatch2 = Patch(0x14086D073, "\x46\x0F\xB6\x8C\x50\x20\x00\x08\x00\x4B\x8D\x04\x91\x0F\xBF\x54\x41\x28\x90\x90\x90");
@@ -717,6 +719,7 @@ export namespace card {
     Patch LoadIllustrationsPatch11 = Patch(0x14086CFF0, "\xC6\x84\x77\x20\x00\x08\x00\x01");
     Patch LoadIllustrationsPatch12 = Patch(0x14086CFFF, "\xC6\x84\x77\x20\x00\x08\x00\x00");
     Patch LoadIllustrationsPatch13 = Patch(0x14086D00A, "\x41\x81\xFE\xFF\xFF\x00\x00");
+    Patch LoadIllustrationsPatch14 = Patch(0x14086CF70, "\x33\xDB\x90\x90\x90");
     
     Patch LoadImagePatch1 = Patch(0x140752D05, "\x90\x90\x90\x90\x90\x90\x4C\x8B\x3D\x72\x51\x0F\x02\x4D\x8D\x3C\xC7");
     
@@ -761,6 +764,7 @@ export namespace card {
         static map<CardID, NewCard> cards;
 
         static CardData card_datas[new_card_limit];
+        static CardData card_datas_by_id[new_card_limit];
         static CardImageData card_images[new_card_limit];
         static CardID load_ids[new_card_limit];
 
@@ -770,6 +774,7 @@ export namespace card {
             CreateCardPropsHook.Apply(&CreateCardProps_);
             GetCardDataHook.Apply(&GetCardData_);
             GetCardImageHook.Apply(&GetCardImage_);
+            GetCardPropertiesHook.Apply(&GetCardProperties_);
             GetLoadIDHook.Apply(&GetLoadID_);
             ReadCardBinHook.Apply(&ReadCardBin_);
             SetupImageTableHook.Apply(&SetupImageTable_);
@@ -803,6 +808,7 @@ export namespace card {
             LoadIllustrationsPatch11.Apply();
             LoadIllustrationsPatch12.Apply();
             LoadIllustrationsPatch13.Apply();
+            LoadIllustrationsPatch14.Apply();
 
             LoadImagePatch1.Apply();
             LoadImagePatch2.Apply();
@@ -890,6 +896,14 @@ export namespace card {
             // Load the game cards
             CreateCardPropsHook.CallOriginal(&CreateCardProps_)();
             
+            // Add our own cards
+            CardID load_id = original_cards_maxloadid;
+
+            for (auto const& [id, card] : cards)
+            {
+                load_ids[id] = ++load_id;
+            }
+
             // Add our own cards' names and descriptions
             Card* game_cards = (Card*)0x142927600;
             for (auto const& [id, card] : cards)
@@ -1002,6 +1016,11 @@ export namespace card {
             return &card_images[load_ids[id]];
         }
 
+        __declspec(noinline) static CardData* GetCardProperties_(CardID id)
+        {
+            return &card_datas_by_id[id];
+        }
+
         __declspec(noinline) static CardID GetLoadID_(CardID id)
         {
             return load_ids[id];
@@ -1019,13 +1038,15 @@ export namespace card {
 
             // Copy game's loaded cards to our buffer
             memcpy(&card_datas, (Pointer)0x1427D0C30, original_cards_maxloadid * sizeof(CardData));
-            
+            memcpy(&card_datas_by_id, (Pointer)0x142847E50, original_cards_maxid * sizeof(CardData));
+
             // Add our own cards
             CardID load_id = original_cards_maxloadid;
 
             for (auto const& [id, card] : cards)
             {
                 card_datas[++load_id] = card.Data;
+                card_datas_by_id[id] = card.Data;
             }
 
             return ret;
@@ -1091,14 +1112,6 @@ export namespace card {
             // Copy game's loaded cards to our buffer
             memcpy(&load_ids[original_cards_offset], (Pointer)0x140D55480, original_cards_offseted_maxid * sizeof(CardID));
 
-            // Add our own cards
-            CardID load_id = original_cards_maxloadid;
-
-            for (auto const& [id, card] : cards)
-            {
-                load_ids[id] = ++load_id;
-            }
-
             WriteLoadIDTableHook.CallOriginal(&WriteLoadIDTable_)();
         }
     };
@@ -1106,6 +1119,8 @@ export namespace card {
     map<CardID, NewCard> Cards::cards;
 
     CardData Cards::card_datas[new_card_limit];
+
+    CardData Cards::card_datas_by_id[new_card_limit];
 
     CardImageData Cards::card_images[new_card_limit];
 
