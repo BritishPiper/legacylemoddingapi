@@ -53,7 +53,7 @@ Patch ChooseChallengeDeckPatch = Patch(0x1408417AD, "\x90\x90\x48\x98\x89\xC1\xE
 
 // Called when generating the bust image of a character. Usually it saved it in memory to be used later, but not anymore. It is now reloaded every time it's required.
 Patch GenerateBustImagePatch1 = Patch(0x1407FE85A, "\x90\x90\x90\x90\x90\x90\x48\x63\xDA\x48\x83\x3C\xD9\x00\x90\x90\x90\x90\x90\x90\x48\x89\xD9\xE8\x28\x04\x00\x00\x49\x89\xC0\x90\x90\x90"); // Remove the hard 0xF0 limit
-Patch GenerateBustImagePatch2 = Patch(0x1407FE8AE, "\x48\x89\xC3\x90"); // Don't save in memory busts.zip image, since it would overwrite after the static memory
+Patch GenerateBustImagePatch2 = Patch(0x1407FE8AE, "\x48\x89\xC3\x90"); // Don't save in memory busts.zib image, since it would overwrite after the static memory
 Patch GenerateBustImagePatch3 = Patch(0x1407FE8F2, "\x48\x89\xD8\x90"); // Instead, save a pointer in memory
 
 // Called when starting a challenge duel to get the characters' decks
@@ -239,7 +239,7 @@ private:
 			return &characters[id];
 		}
 		else if (id >= 0xF0) {
-			return nullptr;
+			return id == 0xFFFF ? (Character*)1 : nullptr; // Returns 1 to avoid infinite loops
 		}
 		else {
 			return (Character*)(0x142913470 + sizeof(Character) * id);

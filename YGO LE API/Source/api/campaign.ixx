@@ -421,13 +421,11 @@ private:
 		ret->r8 = r8;
 		ret->r9 = r9;
 		ret->rip = UnlockReverseUpdateNonReverseDuelHook.Original;
+		ret->rax = rax;
 
 		if (id >= 0xE2) {
 			ret->rcx = (Register)GetDuelUnlockedAddress(id);
 			ret->rip += 0x4 + 0x3;
-		}
-		else {
-			ret->rax = rax;
 		}
 
 		return ret;
