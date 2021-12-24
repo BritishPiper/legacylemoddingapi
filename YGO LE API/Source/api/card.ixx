@@ -686,8 +686,6 @@ export namespace card {
 
     Hook UnlockedTrunkCardsHook1 = Hook(0x1408BFF37);
 
-    Hook UnlockedTrunkCardsHook2 = Hook(0x1408BEFC0);
-
     Hook WriteLoadIDTableHook = Hook(0x14076C0A1);
 
     // check for El Shaddoll Apkallone (maybe I skipped him when copying load/card data)
@@ -720,15 +718,24 @@ export namespace card {
     Patch LoadIllustrationsPatch12 = Patch(0x14086CFFF, "\xC6\x84\x77\x20\x00\x08\x00\x00");
     Patch LoadIllustrationsPatch13 = Patch(0x14086D00A, "\x41\x81\xFE\xFF\xFF\x00\x00");
     Patch LoadIllustrationsPatch14 = Patch(0x14086CF70, "\x33\xDB\x90\x90\x90");
-    
+
     Patch LoadImagePatch1 = Patch(0x140752D05, "\x90\x90\x90\x90\x90\x90\x4C\x8B\x3D\x72\x51\x0F\x02\x4D\x8D\x3C\xC7");
-    
+
     // This function gets the card image given an ID
     Patch LoadImagePatch2 = Patch(0x140752A31, "\x8B\xC0\x48\x8B\x0D\x4A\x54\x0F\x02\x48\x83\xC1\x04\x90\x90\x90");
-    
+
     Patch LoadImagePatch3 = Patch(0x140752CE4, "\x90\x90\x90\x90\x90\x90\xB8\x78\x3A\x00\x00\x66\x3B\xE8\x90\x90\x90\x90\x90\x90");
     Patch LoadImagePatch4 = Patch(0x140752427, "\x90\x90\xE8\xD2\xBB\x01\x00\x3D\xB6\x27\x00\x00\x48\x8B\x0D\x4A\x5A\x0F\x02\x90\x48\x8D\x0C\xC1");
     Patch LoadImagePatch5 = Patch(0x140754197, "\x90\x90\x90\x90\x90\x90\x4C\x8B\x35\xE0\x3C\x0F\x02\x4D\x8D\x34\xC6");
+
+    Patch SetupTrunkPatch1 = Patch(0x1407F9B66, "\xB8\x30\x10\x01\x00");
+    Patch SetupTrunkPatch2 = Patch(0x1407F9D14, "\x48\x81\xC4\x30\x10\x01\x00");
+    Patch SetupTrunkPatch3 = Patch(0x1407F9B7D, "\x48\x89\x84\x24\x00\x10\x01\x00");
+    Patch SetupTrunkPatch4 = Patch(0x1407F9BA7, "\x48\x89\xAC\x24\x68\x10\x01\x00\x48\x8D\x4C\x24\x40\x48\x89\xB4\x24\x28\x10\x01\x00\x33\xD2\x48\x89\xBC\x24\x20\x10\x01\x00\x41\xB8\xFF\xFF\x00\x00\x4C\x89\xB4\x24\x18\x10\x01\x00\x4C\x89\xBC\x24\x10\x10\x01\x00");
+    Patch SetupTrunkPatch5 = Patch(0x1407F9CB6, "\x81\xFD\xFF\xFF\x00\x00");
+    Patch SetupTrunkPatch6 = Patch(0x1407F9CC3, "\x4C\x8B\xBC\x24\x10\x10\x01\x00\x4C\x8B\xB4\x24\x18\x10\x01\x00\x48\x8B\xBC\x24\x20\x10\x01\x00\x0F\xB7\x08\xB8\x28\x00\x00\x00\x48\x8B\xB4\x24\x28\x10\x01\x00\x48\x8B\xAC\x24\x68\x10\x01\x00");
+    Patch SetupTrunkPatch7 = Patch(0x1407F9D04, "\x48\x8B\x8C\x24\x00\x10\x01\x00");
+    Patch SetupTrunkPatch8 = Patch(0x1407F9D14, "\x48\x81\xC4\x30\x10\x01\x00");
 
     Patch MoveCardFromTrunkPatch1 = Patch(0x1408363A1, "\x90\x90\x90\x90\x90\x90");
     Patch MoveCardFromTrunkPatch2 = Patch(0x140834393, "\x90\x90\x90\x90\x90\x90");
@@ -738,13 +745,18 @@ export namespace card {
     Patch OpenCardDetailsPatch3 = Patch(0x14088962E, "\x90\x90\x66\x3B\xD8\x90\x90");
     Patch OpenCardDetailsPatch4 = Patch(0x140889797, "\x90\x90\x66\x45\x3B\xFD\x90\x90");
 
-    Patch OverflowCheckBypassPatch = Patch(0x1407F9D0F, "\x90\x90\x90\x90\x90");
-
     Patch SetupImageTablePatch = Patch(0x14075228A, "\x48\xA1\x84\x7E\x84\x42\x01\x00\x00\x00\xBA\xFF\xFF\x00\x00\x90\x90\x90\x90\x90\x90\x90");
 
-    // This may be temporary
-    Patch UnlockedTrunkCardsPatch = Patch(0x1408C0061, "\x81\xFB\xFF\xFF\x00\x00");
-    Patch UnlockAllCards3 = Patch(0x1408BEFC0, "\xB8\x03\x00\x00\x00\xC3\x90\x90");
+    // Need to make hooks for both of these
+    //Patch TrunkDeckCardsPatch1 = Patch(0x14075618E, "\x90\x90"); // Get the current number of cards in the deck
+    //Patch TrunkDeckCardsPatch2 = Patch(0x140755F51, "\x"); // Increase the number of cards in the trunk deck
+
+    Patch UnlockedTrunkCardsPatch1 = Patch(0x1408C0061, "\x81\xFB\xFF\xFF\x00\x00"); // Load the current unlocked cards to show on trunk
+    Patch UnlockedTrunkCardsPatch2 = Patch(0x1408C0025, "\x42\x89\x14\x80\x90\x90\x90\x90");
+    Patch UnlockedTrunkCardsPatch3 = Patch(0x1408BFF49, "\xBB\xFF\xFF\x00\x00");
+    Patch UnlockedTrunkCardsPatch4 = Patch(0x1408BEFCD, "\x90\x90"); // Get the current unlocked cards to show on trunk
+    Patch UnlockedTrunkCardsPatch5 = Patch(0x1408BEFD9, "\x4C\x63\x04\x90\x90\x90\x90\x90");
+
     //[+2700+30]
     class Cards {
     public:
@@ -779,7 +791,6 @@ export namespace card {
             ReadCardBinHook.Apply(&ReadCardBin_);
             SetupImageTableHook.Apply(&SetupImageTable_);
             UnlockedTrunkCardsHook1.Apply(&UnlockedTrunkCards1_);
-            UnlockedTrunkCardsHook2.Apply(&UnlockedTrunkCards2_);
             WriteLoadIDTableHook.Apply(&WriteLoadIDTable_);
         }
 
@@ -824,11 +835,22 @@ export namespace card {
             OpenCardDetailsPatch3.Apply();
             OpenCardDetailsPatch4.Apply();
 
-            OverflowCheckBypassPatch.Apply();
-
             SetupImageTablePatch.Apply();
 
-            UnlockedTrunkCardsPatch.Apply();
+            SetupTrunkPatch1.Apply();
+            SetupTrunkPatch2.Apply();
+            SetupTrunkPatch3.Apply();
+            SetupTrunkPatch4.Apply();
+            SetupTrunkPatch5.Apply();
+            SetupTrunkPatch6.Apply();
+            SetupTrunkPatch7.Apply();
+            SetupTrunkPatch8.Apply();
+
+            UnlockedTrunkCardsPatch1.Apply();
+            UnlockedTrunkCardsPatch2.Apply();
+            UnlockedTrunkCardsPatch3.Apply();
+            UnlockedTrunkCardsPatch4.Apply();
+            UnlockedTrunkCardsPatch5.Apply();
             //UnlockAllCards3.Apply();
         }
 
@@ -858,7 +880,7 @@ export namespace card {
                 wchar_t* name = extracards.ReadFixedString<wchar_t>(card.NameSize);
                 wchar_t* description = extracards.ReadFixedString<wchar_t>(card.DescriptionSize);
 
-                cards.insert({ card.ID, NewCard(card, name, description)});
+                cards.insert({ card.ID, NewCard(card, name, description) });
             }
         }
 
@@ -895,7 +917,7 @@ export namespace card {
         {
             // Load the game cards
             CreateCardPropsHook.CallOriginal(&CreateCardProps_)();
-            
+
             // Add our own cards
             CardID load_id = original_cards_maxloadid;
 
@@ -915,7 +937,7 @@ export namespace card {
                 Icon icon = card.Data.Icon;
                 Kind kind = card.Data.Kind;
                 SubKind subkind = GetSubKind(kind);
-                
+
                 game_card->Name = card.Name.c_str();
                 game_card->Description = card.Description.c_str();
                 game_card->IsMonster = subkind != SubKind::None;
@@ -1093,18 +1115,6 @@ export namespace card {
             MovRcxRax();
 
             CallEx(UnlockedTrunkCards1__);
-        }
-
-        __declspec(noinline) static Dword UnlockedTrunkCards2_(Register rcx, CardID id)
-        {
-            if (cards.contains(id))
-            {
-                return 3;
-            }
-            else
-            {
-                return UnlockedTrunkCardsHook2.CallOriginal(&UnlockedTrunkCards2_)(rcx, id);
-            }
         }
 
         __declspec(noinline) static void WriteLoadIDTable_(void)
