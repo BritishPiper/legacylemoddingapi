@@ -684,7 +684,7 @@ export namespace card {
 
     Hook SetupImageTableHook = Hook(0x1407521E0);
 
-    Hook UnlockedTrunkCardsHook1 = Hook(0x1408BFF37);
+    Hook UnlockedTrunkCardsHook = Hook(0x1407F9120);
 
     Hook WriteLoadIDTableHook = Hook(0x14076C0A1);
 
@@ -790,7 +790,7 @@ export namespace card {
             GetLoadIDHook.Apply(&GetLoadID_);
             ReadCardBinHook.Apply(&ReadCardBin_);
             SetupImageTableHook.Apply(&SetupImageTable_);
-            UnlockedTrunkCardsHook1.Apply(&UnlockedTrunkCards1_);
+            UnlockedTrunkCardsHook.Apply(&UnlockedTrunkCards_);
             WriteLoadIDTableHook.Apply(&WriteLoadIDTable_);
         }
 
@@ -1089,32 +1089,14 @@ export namespace card {
 
         static Byte unlocked_cards[new_card_limit];
 
-        __declspec(noinline) static Return* UnlockedTrunkCards1__(Byte original_unlocked_cards[original_cards_maxloadid], Register rdx, Register r8, Register r9)
+        __declspec(noinline) static Byte* UnlockedTrunkCards_(void)
         {
-            Return* ret = (Return*)_malloca(sizeof(Return));
-
-            ret->rdx = rdx;
-            ret->r8 = r8;
-            ret->r9 = r9;
-            ret->rip = UnlockedTrunkCardsHook1.Original;
-
-            memcpy(&unlocked_cards[0], &original_unlocked_cards[0], original_cards_maxloadid * sizeof(Byte));
-
             for (auto const& [id, card] : cards)
             {
                 unlocked_cards[load_ids[id]] = 3;
             }
 
-            ret->rax = (Register)(&unlocked_cards[0]);
-
-            return ret;
-        }
-
-        __declspec(noinline) static void UnlockedTrunkCards1_(void)
-        {
-            MovRcxRax();
-
-            CallEx(UnlockedTrunkCards1__);
+            return &unlocked_cards[0];
         }
 
         __declspec(noinline) static void WriteLoadIDTable_(void)
