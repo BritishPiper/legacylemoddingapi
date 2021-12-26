@@ -77,7 +77,7 @@ private:
 	{
 		string formatted = Now() + " | " + message;
 
-		log << formatted << std::endl;
+		log << formatted << endl;
 		log.flush();
 	}
 

@@ -18,6 +18,9 @@ import log;
 // Called whenever the game wants to pass the save file from memory to disk
 Hook SaveDataToDiskHook = Hook(0x1408DA240);
 
+// Game bugs a lot if Steam fails to save (so we return the save is always a success)
+Patch SteamSaveBugPatch = Patch(0x1408DA2F2, "\x8B\xD1\x90");
+
 // 0x140871490 - GetSaveFile
 
 // SavedMiscData = Save + (4056 = 0xfd8)
@@ -34,6 +37,7 @@ public:
 		Load();
 
 		SaveDataToDiskHook.Apply(&Save_);
+		SteamSaveBugPatch.Apply();
 	}
 
 	static void Load(void)
@@ -119,6 +123,8 @@ private:
 
 	__declspec(noinline) static void Save_(void)
 	{
+		SaveDataToDiskHook.CallOriginal(&Save)();
+
 		Call(Save);
 	}
 };
