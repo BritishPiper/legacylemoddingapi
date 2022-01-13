@@ -40,10 +40,89 @@ export namespace card {
     // loc - ([(id*2 + 2)*2] + 0x1A3*2 + 2)*2
     // size - (id*2 + 3)*2
     enum class Archetype : Word { // Size: 0x2
-        Madolche = 0x86,
-        WorldLegacy = 0x142,
-        Orcust = 0x167,
-        Adamancipator = 0x197
+        Archfiend = 2,
+        DarkScorpion = 5,
+        Amazoness = 6,
+        LV = 8,
+        ElementalHero = 9,
+        ElementalHeroNeos = 11,
+        ElementalHeroNeos2 = 12,
+        Neos = 13,
+        Ojama = 14,
+        Machina = 20,
+        Roid = 22,
+        Volcanic = 33,
+        ArcanaForce = 42,
+        Rainbow = 46,
+        Frog = 53,
+        Clear = 62,
+        RedEyes = 63,
+        Synchron = 76,
+        Malefic = 82,
+        Fusion = 89,
+        Meklord = 90,
+        Meklord2 = 91,
+        TG = 92,
+        Resonator = 106,
+        Number = 120,
+        Photon = 123,
+        Madolche = 134,
+        XYZ = 136,
+        NobleKnight = 144,
+        Galaxy = 146,
+        Brotherhood = 148,
+        FireFormation = 149,
+        Traptrix = 167,
+        Hole = 168,
+        Cat = 174, // Working
+        GalaxyEyes = 185,
+        OddEyes = 189,
+        SuperheavySamurai = 197,
+        Performapal = 202,
+        King = 206,
+        King2 = 207,
+        Charmer = 226,
+        Familiar = 227,
+        Crystal = 228,
+        Void = 237,
+        Speedroid = 252,
+        BlueEyes = 268,
+        NumberUtopic = 269,
+        Kuriboh = 287,
+        Invoked = 305,
+        Pendulum = 317,
+        Trickstar = 319,
+        Gouki = 320,
+        WorldLegacy = 322,
+        CodeTalker = 327,
+        Altergeist = 329,
+        Tindangle = 338,
+        Mekkknight = 339,
+        Cynet = 356,
+        Salamangreat = 357,
+        Dinowrestler = 358,
+        Orcust = 359,
+        ThunderDragon = 360,
+        Danger = 362,
+        Mayakashi = 366,
+        Valkyrie = 367,
+        Witchcrafter = 379,
+        EvilEye = 380,
+        Marincess = 382,
+        Unchained = 388,
+        Dragonmaid = 392,
+        Generaider = 393,
+        Ignister = 394,
+        AI = 395,
+        AncientWarrior = 396,
+        Megalith = 397,
+        NumberF0UtopicFuture = 400,
+        Rebellion = 402,
+        KingBeast = 405,
+        Adamancipator = 407,
+        Rikka = 408,
+        Eldlich = 409,
+        GoldenLand = 411
     };
 
     enum class Attribute : Dword { // Size: 0x4
@@ -880,6 +959,8 @@ export namespace card {
                 wchar_t* name = extracards.ReadFixedString<wchar_t>(card.NameSize);
                 wchar_t* description = extracards.ReadFixedString<wchar_t>(card.DescriptionSize);
 
+                if (card.Kind == Kind::DarkSynchro) continue;
+
                 cards.insert({ card.ID, NewCard(card, name, description) });
             }
         }
@@ -899,10 +980,168 @@ export namespace card {
 
                 switch (archetype)
                 {
+                case Archetype::Cat:
+                    return id == 3500 || id == 3502 || id == 3503 || id == 3504;
                 case Archetype::Madolche:
                     return card.Name.contains(L"Madolche");
+                case Archetype::AncientWarrior:
+                    return card.Name.contains(L"Ancient Warriors");
                 case Archetype::Adamancipator:
                     return card.Name.contains(L"Adamancipator");
+                case Archetype::BlueEyes:
+                    return card.Name.contains(L"Blue-Eyes");
+                case Archetype::RedEyes:
+                    return card.Name.contains(L"Red-Eyes");
+                case Archetype::Rikka:
+                    return card.Name.contains(L"Rikka");
+                case Archetype::Eldlich:
+                    return id == 15123;
+                case Archetype::GoldenLand:
+                    return card.Name.contains(L"Golden Land");
+                case Archetype::Meklord:
+                    return card.Name.contains(L"Machine Emperor") || card.Name.contains(L"Meklord Emperor");
+                case Archetype::Meklord2:
+                    return id == 3657 || id == 3658 || id == 3659 || id == 3660 || id == 3661 || id == 3662 || id == 3663 || id == 3664 || id == 3665 || id == 3666 || id == 3667 || id == 3668 || id == 3669 || id == 3670 || id == 3671 || id == 3672 || id == 3673 || id == 3674 || id == 3675 || id == 3676 || id == 3677 || id == 3678 || id == 3679 || id == 3680 || id == 3681;
+                case Archetype::NobleKnight:
+                    return id == 3709 || id == 3711 || id == 14803 || id == 15082;
+                case Archetype::ArcanaForce:
+                    return card.Name.contains(L"Arcana Force");
+                case Archetype::LV:
+                    return id == 3616 || id == 3617 || id == 3618;
+                case Archetype::ElementalHero:
+                    return id == 14954;
+                case Archetype::ElementalHeroNeos:
+                    return id == 3729 || id == 14954;
+                case Archetype::ElementalHeroNeos2:
+                    return id == 3729 || id == 14954;
+                case Archetype::Neos:
+                    return id == 3729 || id == 14954;
+                case Archetype::Malefic:
+                    return card.Name.contains(L"Malefic");
+                case Archetype::Fusion:
+                    return id == 3748 || id == 4867 || id == 14984 || id == 15057 || id == 15144;
+                case Archetype::Crystal:
+                    return id == 3758;
+                case Archetype::Ojama:
+                    return id == 3760;
+                case Archetype::Roid:
+                    return id == 3762 || id == 15179 || id == 15180;
+                case Archetype::Volcanic:
+                    return id == 3772;
+                case Archetype::Clear:
+                    return id == 3774 || id == 3775 || id == 3776 || id == 3780;
+                case Archetype::Frog:
+                    return id == 3786;
+                case Archetype::Synchron:
+                    return id == 3797;
+                case Archetype::Archfiend:
+                    return card.Name.contains(L"Archfiend");
+                case Archetype::DarkScorpion:
+                    return card.Name.contains(L"Dark Scorpion");
+                case Archetype::Amazoness:
+                    return id == 5182;
+                case Archetype::Number:
+                    return id == 13166 || id == 14958;
+                case Archetype::OddEyes:
+                    return id == 13462 || id == 14960;
+                case Archetype::SuperheavySamurai:
+                    return id == 14337;
+                case Archetype::Kuriboh:
+                    return id == 14384;
+                case Archetype::Cynet:
+                    return card.Name.contains(L"Cynet");
+                case Archetype::Performapal:
+                    return card.Name.contains(L"Performapal");
+                case Archetype::King:
+                    return card.Name.contains(L"D/D");
+                case Archetype::King2:
+                    return card.Name.contains(L"D/D/D");
+                case Archetype::Brotherhood:
+                    return card.Name.contains(L"Brotherhood of the Fire Fist");
+                case Archetype::FireFormation:
+                    return id == 14733 || id == 14734 || id == 14735 || id == 14736;
+                case Archetype::CodeTalker:
+                    return id == 14783 || id == 14962 || id == 15032;
+                case Archetype::Salamangreat:
+                    return id == 14785 || id == 14989 || id == 15043;
+                case Archetype::Trickstar:
+                    return id == 14787;
+                case Archetype::Gouki:
+                    return id == 14789 || id == 14990 || id == 14991 || id == 15039;
+                case Archetype::Dinowrestler:
+                    return id == 14790;
+                case Archetype::Altergeist:
+                    return id == 14791 || id == 14970 || id == 14971 || id == 14972;
+                case Archetype::Tindangle:
+                    return id == 14792 || id == 14973;
+                case Archetype::Danger:
+                    return id == 14798;
+                case Archetype::Valkyrie:
+                    return id == 14903;
+                case Archetype::Rainbow:
+                    return id == 14955;
+                case Archetype::TG:
+                    return id == 14956;
+                case Archetype::NumberUtopic:
+                    return id == 14958;
+                case Archetype::NumberF0UtopicFuture:
+                    return id == 14958;
+                case Archetype::GalaxyEyes:
+                    return id == 14959;
+                case Archetype::Photon:
+                    return id == 14959 || id == 14981 || id == 14986;
+                case Archetype::Galaxy:
+                    return id == 14959 || id == 14981;
+                case Archetype::Rebellion:
+                    return id == 14960;
+                case Archetype::Charmer:
+                    return id == 14969;
+                case Archetype::Pendulum:
+                    return id == 14982 || id == 14983;
+                case Archetype::XYZ:
+                    return id == 14983 || id == 15061;
+                case Archetype::Marincess:
+                    return id == 14992;
+                case Archetype::Resonator:
+                    return card.Name.contains(L"Resonator");
+                case Archetype::Mekkknight:
+                    return id == 15010;
+                case Archetype::ThunderDragon:
+                    return id == 15011;
+                case Archetype::Dragonmaid:
+                    return id == 15012 || id == 15027;
+                case Archetype::Generaider:
+                    return id == 15013 || id == 15014;
+                case Archetype::Unchained:
+                    return id == 15015;
+                case Archetype::KingBeast:
+                    return id == 15016;
+                case Archetype::Invoked:
+                    return id == 15026;
+                case Archetype::Traptrix:
+                    return id == 15031 || id == 15147;
+                case Archetype::Ignister:
+                    return id == 15036 || id == 15134 || id == 15135;
+                case Archetype::Familiar:
+                    return id == 15041;
+                case Archetype::AI:
+                    return id == 15042 || id == 15059;
+                case Archetype::Void:
+                    return id == 15051;
+                case Archetype::Witchcrafter:
+                    return id == 15053 || id == 15063;
+                case Archetype::EvilEye:
+                    return id == 15054;
+                case Archetype::Megalith:
+                    return id == 15056;
+                case Archetype::Hole:
+                    return id == 15064;
+                case Archetype::Machina:
+                    return card.Name.contains(L"Machina");
+                case Archetype::Mayakashi:
+                    return id == 15149;
+                case Archetype::Speedroid:
+                    return id == 15179 || id == 15180;
                 default:
                     return false;
                 }

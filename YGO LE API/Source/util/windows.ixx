@@ -46,7 +46,7 @@ export auto GetModuleBase(const wchar_t* module)
                 throw MajorError("GetModuleFileNameEx failed.");
             }
 
-            if (wcscmp(path, module)) {
+            if (wcsstr(path, module) != nullptr) {
                 base = static_cast<Byte*>(information.lpBaseOfDll);
                 size = information.SizeOfImage;
 
